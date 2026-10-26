@@ -1,56 +1,29 @@
-# Welcome to your Expo app 👋
+# SpendLite
 
-This is an [Expo](https://expo.dev) project created with [`create-expo-app`](https://www.npmjs.com/package/create-expo-app).
+A minimalist Android expense tracker built with Expo Router, Clerk, and an independent Spring Boot/PostgreSQL API.
 
-## Get started
+## Repositories
 
-1. Install dependencies
+- `spend-lite`: Expo React Native mobile app.
+- `../spendlite-api`: Java 21 / Spring Boot REST API.
 
-   ```bash
-   npm install
-   ```
+## Local setup
 
-2. Start the app
+1. Install dependencies: `npm install`
+2. Copy `.env.example` to `.env` and set `EXPO_PUBLIC_CLERK_PUBLISHABLE_KEY` from Clerk. The API URL defaults to Android emulator host `10.0.2.2`; use your computer's LAN address for a physical Android device.
+3. Configure Clerk email/password. Google sign-in appears only when native Google OAuth is enabled for the Clerk instance.
+4. Start the API and PostgreSQL using the API repo README, then run `npx expo start`.
+5. Build a development client for Clerk native authentication and SQLCipher; Expo Go is not sufficient.
 
-   ```bash
-   npx expo start
-   ```
+## Commands
 
-In the output, you'll find options to open the app in a
+- `npx expo lint`
+- `npx tsc --noEmit`
+- `npm test -- --runInBand`
+- `npx expo-doctor`
 
-- [development build](https://docs.expo.dev/develop/development-builds/introduction/)
-- [Android emulator](https://docs.expo.dev/workflow/android-studio-emulator/)
-- [iOS simulator](https://docs.expo.dev/workflow/ios-simulator/)
-- [Expo Go](https://expo.dev/go), a limited sandbox for trying out app development with Expo
+EAS development and Android production build profiles are defined in `eas.json`. A GitHub Actions workflow can create Android production builds; publishing to Google Play remains a manual staged rollout.
 
-You can start developing by editing the files inside the **src/app** directory. This project uses [file-based routing](https://docs.expo.dev/router/introduction).
+## Dependency audit
 
-## Get a fresh project
-
-When you're ready, run:
-
-```bash
-npm run reset-project
-```
-
-This command will move the starter code to the **example** directory and create a blank **src/app** directory where you can start developing.
-
-### Other setup steps
-
-- To set up ESLint for linting, run `npx expo lint`, or follow our guide on ["Using ESLint and Prettier"](https://docs.expo.dev/guides/using-eslint/)
-- If you'd like to set up unit testing, follow our guide on ["Unit Testing with Jest"](https://docs.expo.dev/develop/unit-testing/)
-- Learn more about the TypeScript setup in this template in our guide on ["Using TypeScript"](https://docs.expo.dev/guides/typescript/)
-
-## Learn more
-
-To learn more about developing your project with Expo, look at the following resources:
-
-- [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
-- [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
-
-## Join the community
-
-Join our community of developers creating universal apps.
-
-- [Expo on GitHub](https://github.com/expo/expo): View our open source platform and contribute.
-- [Discord community](https://chat.expo.dev): Chat with Expo users and ask questions.
+The current SDK 58 dependency tree reports high-severity advisories in transitive Expo CLI packages (`node-forge` and `zod`). `npm audit fix --force` proposes downgrading the SDK-compatible date picker to a breaking version, so do not apply that automatic change. Recheck the audit when Expo publishes compatible dependency patches.
